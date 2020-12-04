@@ -14,6 +14,72 @@ namespace School.Controllers
         //internal function that will be used by public functions
         private SchoolDbContext dbContext = new SchoolDbContext();
 
+
+        /// <summary>
+        /// Delete a teacher information for a specific teacherId
+        /// </summary>
+        /// <param name="id">The id of the teacher</param>
+        /// <example>POST /api/teacherData/DeleteTeacher/2</example>
+        /// <returns>teacher information</returns>
+        [HttpPost]
+        public void AddTeacher([FromBody] Teacher newTeacher)
+        {
+            //Create an instance of DB connection
+            MySqlConnection Conn = dbContext.AccessDatabase();
+
+            //Open the connection
+            Conn.Open();
+
+            //Establish a new command 
+            MySqlCommand cmd = Conn.CreateCommand();
+
+            //Bulid the SQL query
+            cmd.CommandText = "INSERT INTO teachers(teacherfname, teacherlname, employeenumber, hiredate, salary) VALUES (@teacherfname, @teacherlname, @employeenumber, @hiredate, @salary)";
+
+             
+            cmd.Parameters.AddWithValue("@teacherfname", newTeacher.Teacherfname);
+            cmd.Parameters.AddWithValue("@teacherlname", newTeacher.Teacherlname);
+            cmd.Parameters.AddWithValue("@employeenumber", newTeacher.Employeenumber);
+            cmd.Parameters.AddWithValue("@hiredate", newTeacher.Hiredate);
+            cmd.Parameters.AddWithValue("@salary", newTeacher.Salary);
+            cmd.Prepare();
+
+            //Executing the sql query 
+            cmd.ExecuteNonQuery();
+
+            Conn.Close();
+        }
+
+
+        /// <summary>
+        /// Delete a teacher information for a specific teacherId
+        /// </summary>
+        /// <param name="id">The id of the teacher</param>
+        /// <example>POST /api/teacherData/DeleteTeacher/2</example>
+        /// <returns>teacher information</returns>
+        [HttpPost]
+        public void DeleteTeacher(int id)
+        {
+            //Create an instance of DB connection
+            MySqlConnection Conn = dbContext.AccessDatabase();
+
+            //Open the connection
+            Conn.Open();
+
+            //Establish a new command 
+            MySqlCommand cmd = Conn.CreateCommand();
+            
+            //Bulid the SQL query
+            cmd.CommandText = "DELETE FROM Teachers WHERE teacherid = @id";
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Prepare();
+
+            //Executing the sql query 
+            cmd.ExecuteNonQuery();
+
+            Conn.Close();
+        }
+
         //This Controller Will access the teacher table of our blog database.
         /// <summary>
         /// Returns a list of teachers in the system
@@ -103,8 +169,6 @@ namespace School.Controllers
             //Return the final list of teachers
             return teachers;
         }
-
-
 
     }
 }

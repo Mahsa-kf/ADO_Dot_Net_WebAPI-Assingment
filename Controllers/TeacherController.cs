@@ -15,6 +15,48 @@ namespace School.Controllers
             return View();
         }
 
+        //GET : /Teacher/New
+        public ActionResult New()
+        {
+            return View();
+        }
+
+        //POST : /Teacher/Create
+        [HttpPost]
+        public ActionResult Create(string Teacherfname, string Teacherlname, string Employeenumber, DateTime Hiredate, decimal Salary)
+        {
+            Teacher newTeacher = new Teacher();
+            newTeacher.Teacherfname = Teacherfname;
+            newTeacher.Teacherlname = Teacherlname;
+            newTeacher.Employeenumber = Employeenumber;
+            newTeacher.Hiredate = Hiredate;
+            newTeacher.Salary = Salary;
+
+            TeacherDataController teacherDataController = new TeacherDataController();
+            teacherDataController.AddTeacher(newTeacher);
+
+            return RedirectToAction("List");
+        }
+
+        //GET : /Teacher/DeleteConfirm/{id}
+        public ActionResult DeleteConfirm(int id)
+        {
+            TeacherDataController teacherDataController = new TeacherDataController();
+            Teacher teacher = teacherDataController.GetTeacher(id);
+
+            return View(teacher);
+        }
+
+
+        //POST : /teacher/Delete/{id}
+        [HttpPost]
+        public ActionResult Delete(int id)
+        {
+            TeacherDataController teacherDataController = new TeacherDataController();
+            teacherDataController.DeleteTeacher(id);
+            return RedirectToAction("List");
+        }
+
         //GET : /Teacher/List
         public ActionResult List()
         {
@@ -31,7 +73,6 @@ namespace School.Controllers
             ActionResult result = View(teacher);
             return result;
         }
-
 
     }
 } 
